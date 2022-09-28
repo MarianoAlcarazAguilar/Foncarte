@@ -37,7 +37,7 @@ WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '/html
 # WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[8]/div[2]/div/div/div[1]/div/div/div[2]/div[2]/div[1]/div[1]/div/div/div[2]/div/ul/li[1]/label/span[2]'))).click()
 # Elegimos solo artistas latinoamericanos
 for pais, nacionalidad in zip(paises, nacionalidades):
-    time.sleep(3)
+    time.sleep(2)
     print(pais)
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, nacionalidad))).click()
 
@@ -47,7 +47,7 @@ for i in range(100000):
     if i % 10 == 0:
         print(f'Guardando html tras {i} búsquedas')
         html = driver.page_source
-        with open('../datasets/source_code_mutual_art.html', 'w') as f:
+        with open('../datasets/source_code_mutual_art_segunda_ronda_eliminar_después.html', 'w') as f:
             f.write(html)
 
 driver.quit()
