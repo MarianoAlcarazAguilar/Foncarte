@@ -22,4 +22,24 @@ def clean_dimensiones(df):
     
     return df
 
-
+def clean_autor(df):
+    '''
+    Limpiar artistas de mutual art y los modifica para
+    ser iguales a la lista de artistas acordada
+    
+    Es probable que se tenga que modificar esta función para añadir nombres adicionales.
+    Hay artistas que no son de la lista
+    
+    SUGERENCIA: quitarle los guiones a todos los nombres (de la tabla de referencia)
+    '''
+    df['autor'] = df['autor'].str.replace('cesar villacres', 'cesar a.villacres')
+    df['autor'] = df['autor'].str.replace('emiliano di cavalcanti', 'emiliano de cavalvanti')
+    df['autor'] = df['autor'].str.replace('graciela rodo-boulanger', 'graciela rodo boulanger')
+    df['autor'] = df['autor'].str.replace('jesus-rafael soto', 'jesus rafael soto')
+    df['autor'] = df['autor'].str.replace('joaquin torres garcia', 'joaquin torres-garcia')
+    df['autor'] = df['autor'].str.replace('ignacio iturria', 'ignacio de iturria')
+    df['autor'] = df['autor'].str.replace('jose maria mijares', 'jose mijares')
+    df['autor'] = df['autor'].str.replace('emiliano di cavalcanti', 'emiliano de cavalvanti')
+    df['autor'] = df['autor'].str.replace('ricardo martinez de hoyos', 'ricardo martinez')
+        
+    return df
