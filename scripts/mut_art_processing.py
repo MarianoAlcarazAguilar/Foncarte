@@ -147,6 +147,7 @@ def standardize_data(df):
 
 
 
+<<<<<<< HEAD
 
 df = pd.read_csv('PATH/data_mutualart_completo.csv')
 #df = clean_mutual_art(df)
@@ -155,5 +156,8 @@ df = standardize_data(df)
 df.to_csv('clean_mut_art_ver2.csv')
 
 
+=======
+>>>>>>> c2db9ec602251b44ab389c9cb4d8531f4898d28d
 #TO-DO
 # de fecha creacion ver que onda con los valores no numéricos
+# simplificar más casa de subasta
