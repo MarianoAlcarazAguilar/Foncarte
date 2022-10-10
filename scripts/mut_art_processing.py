@@ -133,13 +133,6 @@ def standardize_data(df):
 
 
 
-
-df = pd.read_csv('/Users/ernie/ITAM/top_neg_2/Foncarte/datasets/data_mutualart_completo.csv')
-#df = clean_mutual_art(df)
-df = standardize_data(df)
-
-df.to_csv('clean_mut_art_ver2.csv')
-
-
 #TO-DO
 # de fecha creacion ver que onda con los valores no numéricos
+# simplificar más casa de subasta
