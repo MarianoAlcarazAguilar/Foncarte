@@ -7,10 +7,10 @@ import utils.clean_casa_functions as casa_funcs
 
 def get_sold(df):
     
-    sold = df[df['precio_venta'].str.contains('upcoming') == False]
-    sold = sold[sold['precio_venta'].str.contains('live now') == False]
-    sold = sold[sold['precio_venta'].str.contains('results coming soon') == False]
-    sold = sold[sold['precio_venta'].str.contains('not sold') == False]
+    sold = df[df['precio_venta'].str.contains('upcoming', case =False) == False]
+    sold = sold[sold['precio_venta'].str.contains('live now', case =False) == False]
+    sold = sold[sold['precio_venta'].str.contains('results coming soon', case =False) == False]
+    sold = sold[sold['precio_venta'].str.contains('not sold', case =False) == False]
     
     return sold
 
@@ -20,8 +20,10 @@ def clean_date(df_orig):
     '''
     lower_ma = [m.lower() for m in month_abbr]
     df = df_orig.copy()
+    #BORRAR LUEGO
+    df['fecha'] = df['fecha'].str.lower()
     
-    months = df['fecha'].str.extract('^([a-z]{3})') 
+    months = df['fecha'].str.extract('([a-z]{3})')
     months = months[0].str.lower().map(lambda m: lower_ma.index(m)).astype('Int8')
     years = df['fecha'].str.extract('([0-9]{4})')
     days = df['fecha'].str.extract('([0-9]{2}),')
@@ -81,5 +83,6 @@ def clean_mutual_art(df):
     df = clean_date(df)
     df = clean_dimensiones(df)
     df = clean_autor(df)
+    df = clean_casa(df)
     
     return df
