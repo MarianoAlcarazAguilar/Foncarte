@@ -91,6 +91,16 @@ def clean_casa(df):
     
     return df
 
+def clean_precios(df):
+    '''
+    convierte la columna precio ajustado a valores numéricos
+    '''
+    df['precio_ajustado'] = df['precio_ajustado'].str.replace(',','')
+    df['precio_ajustado'] = df['precio_ajustado'].str.replace(' USD','')
+    df['precio_ajustado'] = pd.to_numeric(df['precio_ajustado'])
+    
+    return df
+
 def clean_mutual_art(df):
     '''
     Limpiar la tabla de mutual art
@@ -102,6 +112,7 @@ def clean_mutual_art(df):
     df = clean_autor(df)
     df = clean_casa(df)
     df = clean_fecha_creac(df)
+    df = clean_precios(df)
     
     
     return df
@@ -116,7 +127,7 @@ def standardize_data(df):
     df['performance'] = -420
     
     df = df[['titulo', 'height', 'width', 'tipo', 'tecnica', 'fecha_creacion',
-             'age','casa_subasta', 'fecha', 'precio_ajustado', 'autor', 'performance'
+             'age','casa_subasta', 'fecha', 'precio_ajustado', 'autor', 'performance',
              'source', 'country']]
     
     df.rename(columns={'titulo':'title','width':'length', 'tipo':'art_type', 'tecnica':'medium_text', 
@@ -129,12 +140,15 @@ def standardize_data(df):
     #sacar promedio del precio estimado
     #calcular performance
     #añadir col de país de origen
+    
+    # ----
+
     return df
 
 
 
 
-df = pd.read_csv('/Users/ernie/ITAM/top_neg_2/Foncarte/datasets/data_mutualart_completo.csv')
+df = pd.read_csv('PATH/data_mutualart_completo.csv')
 #df = clean_mutual_art(df)
 df = standardize_data(df)
 
