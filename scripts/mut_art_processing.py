@@ -33,6 +33,21 @@ def clean_date(df_orig):
     
     return df
 
+def clean_fecha_creac(df):
+    '''
+    PUEDEN SALIR VALORES MAYORES A 2022
+    AGREGAR QUE LA FECHA DE CREAC SEA MENOR A LA DE VENTA
+
+    '''
+    
+    df['fecha_creacion'] = df['fecha_creacion'].str.extract('([0-9]{4})')
+    #quitar si se puede
+    df = df[df['fecha_creacion'].isna() == False]
+    df['fecha_creacion'] = pd.to_numeric(df['fecha_creacion'])
+    df = df[df['fecha_creacion'] <= 2022]
+    
+    return df
+
 def clean_dimensiones(df):
     '''
     Limpia la columna dimensiones y agrega las columnas de height y width
@@ -41,6 +56,8 @@ def clean_dimensiones(df):
     df['dimensiones'] = df.dimensiones.apply(lambda x: dim_funcs.fraction_str_replace(x))
     df['is_inch'] = df.dimensiones.apply(lambda x: dim_funcs.is_inches(x))
     df = dim_funcs.extract_numbers(df)
+    
+    df = df[df['is_inch'] != -1]
     
     return df
 
@@ -84,5 +101,45 @@ def clean_mutual_art(df):
     df = clean_dimensiones(df)
     df = clean_autor(df)
     df = clean_casa(df)
+    df = clean_fecha_creac(df)
+    
     
     return df
+
+def standardize_data(df):
+    df = clean_mutual_art(df)
+    
+    #faltaría: performance, source y country
+    df['age'] = 2022-df['fecha_creacion']
+    df['source'] = 'Mutual Art'
+    df['country'] = '-'
+    df['performance'] = -420
+    
+    df = df[['titulo', 'height', 'width', 'tipo', 'tecnica', 'fecha_creacion',
+             'age','casa_subasta', 'fecha', 'precio_ajustado', 'autor', 'performance'
+             'source', 'country']]
+    
+    df.rename(columns={'titulo':'title','width':'length', 'tipo':'art_type', 'tecnica':'medium_text', 
+                       'fecha_creacion':'date_text', 'casa_subasta': 'house',
+                       'precio_ajustado': 'price', 'autor': 'author'}, inplace=True)
+    
+    #a titulo quitarle by ...
+    #renombrar columnas
+    #precio como valor numérico # arreglar las cosas de los números
+    #sacar promedio del precio estimado
+    #calcular performance
+    #añadir col de país de origen
+    return df
+
+
+
+
+df = pd.read_csv('/Users/ernie/ITAM/top_neg_2/Foncarte/datasets/data_mutualart_completo.csv')
+#df = clean_mutual_art(df)
+df = standardize_data(df)
+
+df.to_csv('clean_mut_art_ver2.csv')
+
+
+#TO-DO
+# de fecha creacion ver que onda con los valores no numéricos

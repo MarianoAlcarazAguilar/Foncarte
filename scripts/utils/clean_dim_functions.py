@@ -125,6 +125,7 @@ def extract_numbers(df):
     df['width'] = temp_series.str.extract('([0-9][0-9]?[0-9]?\.?[0-9]?[0-9]?[0-9]?)')
     df['width'] = pd.to_numeric(df['width'])
     
+    #df['height'] = df['height'].apply(lambda x: x*2.5 if )
+    df['height'] = np.where(df['is_inch'] == 0, df['height']*2.54, df['height'])
+    
     return df
-
-
