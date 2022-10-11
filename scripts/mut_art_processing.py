@@ -101,6 +101,12 @@ def clean_precios(df):
     
     return df
 
+def clean_titulo(df):
+    df['titulo'] = df['titulo'].str.split(' by ').str[0]
+    
+    return df
+    
+
 def clean_mutual_art(df):
     '''
     Limpiar la tabla de mutual art
@@ -113,6 +119,7 @@ def clean_mutual_art(df):
     df = clean_casa(df)
     df = clean_fecha_creac(df)
     df = clean_precios(df)
+    df = clean_titulo(df)
     
     
     return df
@@ -147,17 +154,16 @@ def standardize_data(df):
 
 
 
-<<<<<<< HEAD
-
-df = pd.read_csv('PATH/data_mutualart_completo.csv')
+df = pd.read_csv('../datasets/data_mutualart_completo.csv')
 #df = clean_mutual_art(df)
 df = standardize_data(df)
 
-df.to_csv('clean_mut_art_ver2.csv')
+#df.to_csv('../datasets/clean/clean_mut_art_ver2.csv')
 
 
-=======
->>>>>>> c2db9ec602251b44ab389c9cb4d8531f4898d28d
+
 #TO-DO
 # de fecha creacion ver que onda con los valores no numéricos
 # simplificar más casa de subasta
+#simplificar tecnica - in progress
+#aplicar esto para toodooos los datos que tenemos y quitar duplicados
