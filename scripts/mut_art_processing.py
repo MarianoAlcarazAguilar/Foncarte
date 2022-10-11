@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
+import numpy as np
 from calendar import month_abbr
 
 import utils.clean_dim_functions as dim_funcs
@@ -105,6 +106,33 @@ def clean_titulo(df):
     df['titulo'] = df['titulo'].str.split(' by ').str[0]
     
     return df
+
+def calc_performance(df):
+    '''
+    DF después de haber limpiado los precios
+
+    Parameters
+    ----------
+    df : TYPE
+        DESCRIPTION.
+
+    Returns
+    -------
+    df_test : TYPE
+        DESCRIPTION.
+
+    '''
+    df_test = df
+    
+    df_test['precio_estimado'] = df_test['precio_estimado'].str.replace(',','')
+    df_test['lower'] = df_test['precio_estimado'].str.extract('([0-9][0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?)')
+    df_test['precio_estimado'] = df_test['precio_estimado'].str.replace('[0-9][0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?','', n=1)
+    df_test['upper'] = df_test['precio_estimado'].str.extract('([0-9][0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?)')
+    df_test['upper'] = np.where(df_test['upper'].isna(), (df_test['lower'].astype(int)), df_test['upper'])
+    df_test['avg'] = (df_test['lower'].astype(int) + df_test['upper'].astype(int))/2
+    df_test['performance'] = df_test['precio_ajustado']/df_test['avg']
+    
+    return df_test
     
 
 def clean_mutual_art(df):
@@ -120,6 +148,7 @@ def clean_mutual_art(df):
     df = clean_fecha_creac(df)
     df = clean_precios(df)
     df = clean_titulo(df)
+    df = calc_performance(df)
     
     
     return df
@@ -131,11 +160,10 @@ def standardize_data(df):
     df['age'] = 2022-df['fecha_creacion']
     df['source'] = 'Mutual Art'
     df['country'] = '-'
-    df['performance'] = -420
     
     df = df[['titulo', 'height', 'width', 'tipo', 'tecnica', 'fecha_creacion',
              'age','casa_subasta', 'fecha', 'precio_ajustado', 'autor', 'performance',
-             'source', 'country']]
+             'source','country']]
     
     df.rename(columns={'titulo':'title','width':'length', 'tipo':'art_type', 'tecnica':'medium_text', 
                        'fecha_creacion':'date_text', 'casa_subasta': 'house',
@@ -145,7 +173,7 @@ def standardize_data(df):
     #renombrar columnas
     #precio como valor numérico # arreglar las cosas de los números
     #sacar promedio del precio estimado
-    #calcular performance
+    #ajustar performance con monedas ( over si ya está en dólares)
     #añadir col de país de origen
     
     # ----
