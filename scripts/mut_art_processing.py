@@ -92,6 +92,15 @@ def clean_casa(df):
     
     return df
 
+def to_lower(df):
+  columnsTolower = list(df.select_dtypes(include=['category','object']))
+  for feature in columnsTolower:
+      try:
+          df[feature] = df[feature].str.lower()
+      except:
+          print('Error parsing '+feature)
+  return df
+
 def clean_precios(df):
     '''
     convierte la columna precio ajustado a valores numéricos
@@ -177,6 +186,7 @@ def standardize_data(df):
     #añadir col de país de origen
     
     # ----
+    df = to_lower(df)
 
     return df
 
