@@ -7,12 +7,15 @@ import utils.clean_dim_functions as dim_funcs
 import utils.clean_casa_functions as casa_funcs
 
 def get_sold(df):
-    
+    '''
     sold = df[df['precio_venta'].str.contains('upcoming', case =False) == False]
     sold = sold[sold['precio_venta'].str.contains('live now', case =False) == False]
     sold = sold[sold['precio_venta'].str.contains('results coming soon', case =False) == False]
     sold = sold[sold['precio_venta'].str.contains('not sold', case =False) == False]
+    '''
     
+    sold = df[df.precio_venta != 0]
+
     return sold
 
 def clean_date(df_orig):
@@ -92,6 +95,7 @@ def clean_casa(df):
     
     return df
 
+
 def to_lower(df):
   columnsTolower = list(df.select_dtypes(include=['category','object']))
   for feature in columnsTolower:
@@ -100,6 +104,7 @@ def to_lower(df):
       except:
           print('Error parsing '+feature)
   return df
+
 
 def clean_precios(df):
     '''
@@ -130,7 +135,6 @@ def calc_performance(df):
     df_test : TYPE
         DESCRIPTION.
 
-    '''
     df_test = df
     
     df_test['precio_estimado'] = df_test['precio_estimado'].str.replace(',','')
@@ -140,8 +144,14 @@ def calc_performance(df):
     df_test['upper'] = np.where(df_test['upper'].isna(), (df_test['lower'].astype(int)), df_test['upper'])
     df_test['avg'] = (df_test['lower'].astype(int) + df_test['upper'].astype(int))/2
     df_test['performance'] = df_test['precio_ajustado']/df_test['avg']
+    '''
+
+
+    df['lst_precio_estimado'] = df['precio_estimado'].str.split(' ')
+    df['avg'] = df['lst_precio_estimado'].apply(lambda x: (float(x[0])+float(x[2]))/2 if x[0]!='nan' else 'NA')
+    df['performance'] = df['precio_ajustado']/df['avg']
     
-    return df_test
+    return df
     
 
 def clean_mutual_art(df):
@@ -155,7 +165,7 @@ def clean_mutual_art(df):
     df = clean_autor(df)
     df = clean_casa(df)
     df = clean_fecha_creac(df)
-    df = clean_precios(df)
+    #df = clean_precios(df)
     df = clean_titulo(df)
     df = calc_performance(df)
     
@@ -192,11 +202,13 @@ def standardize_data(df):
 
 
 
-df = pd.read_csv('../datasets/data_mutualart_completo.csv')
+df = pd.read_csv('/Users/guillermonaranjomuedano/Documents/Escuela/Materias Antiguas/7° Semestre/Tópico de Negocios II/Proyecto Foncarte/Foncarte/datasets/data_mutualart_completo_ajustado.csv')
 #df = clean_mutual_art(df)
 df = standardize_data(df)
 
-#df.to_csv('../datasets/clean/clean_mut_art_ver2.csv')
+df.head(10)
+
+df.to_csv('/Users/guillermonaranjomuedano/Documents/Escuela/Materias Antiguas/7° Semestre/Tópico de Negocios II/Proyecto Foncarte/Foncarte/datasets/clean/clean_mut_art_ver2_ajustado.csv')
 
 
 
